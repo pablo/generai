@@ -27,13 +27,14 @@ class Game():
 
     def __init__(self, nscoresheets):
         self.nscoresheets = nscoresheets
-        self.players_plugins = []
+        self.players_plugins = {}
         self.players = []
         self.scoresheets = []
 
     def add_player(self, player):
-        self.players_plugins.append(player)
-        self.players.append(player.name)
+        name = player.name()
+        self.players_plugins[name] = player
+        self.players.append(name)
 
     def start(self):
         # plays are:
@@ -49,15 +50,19 @@ class Game():
             for player in self.players:
                 self.turn(player)
 
+    def results(self):
+        print("RESULTs!")
+
 
 
     def turn(self, player):
+        plugin = self.players_plugins[player]
         r = get_random_dice(5)
         for i in range(3):
             try:
-                roll, decision, scoresheet  = player.play(r, self.players, self.scoresheets)
-            except:
-                print("Error inesperado:", sys.exc_info()[0])
+                roll, decision, scoresheet  = plugin.play(r, self.players, self.scoresheets)
+            except Exception as e:
+                print("Error inesperado: {0}".format(e))
                 # NOTIFY
 
 
