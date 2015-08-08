@@ -1,7 +1,7 @@
 # 
 import sys
 
-from generala import get_random_dice
+from generala import get_random_dice, valid_play, play_value
 
 class Player():
 
@@ -37,8 +37,8 @@ class Game():
         name = player.name()
         self.players_plugins[name] = player
         self.players.append(name)
-#        for i in range(self.nscoresheets):
-#            self.scoresheets
+        for i in range(self.nscoresheets):
+            self.scoresheets[name] = {}
 
     def start(self):
         # plays are:
@@ -57,15 +57,14 @@ class Game():
     def results(self):
         print("RESULTs!")
 
-
-
     def turn(self, player):
         plugin = self.players_plugins[player]
         r = get_random_dice(5)
         nroll = 5
         for i in range(3):
             try:
-                roll, decision, scoresheet  = plugin.play(r, nroll == 5, self.players, self.scoresheets)
+                bonus = (nroll == 5)
+                roll, decision, scoresheet  = plugin.play(r, bonus, self.players, self.scoresheets)
                 nroll = len(roll)
                 if nroll > 0:
                     r0 = get_random_dice(nroll)
@@ -74,7 +73,11 @@ class Game():
                         r[new_r] = r0[i]
                         i = i+1
                 else:
-                    pass
+                    if not valid_play(decision):
+                        raise Exception('Play [{0}] is invalid'.format(decision))
+                    scoresheet = self.scoresheets[scoresheet][player]
+                    if decision not in scoresheet:
+                        scoresheet[decision] = play_value(decision, r, bonus)
 
             except Exception as e:
                 print("Error inesperado: {0}".format(e))
