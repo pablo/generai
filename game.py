@@ -1,5 +1,6 @@
 # 
 import sys
+import traceback
 
 from generala import get_random_dice, valid_play, play_value
 
@@ -38,7 +39,7 @@ class Game():
         self.players_plugins[name] = player
         self.players.append(name)
         for i in range(self.nscoresheets):
-            self.scoresheets[name] = {}
+            self.scoresheets[i][name] = {}
 
     def start(self):
         # plays are:
@@ -64,7 +65,8 @@ class Game():
         for i in range(3):
             try:
                 bonus = (nroll == 5)
-                roll, decision, scoresheet  = plugin.play(r, bonus, self.players, self.scoresheets)
+                roll, decision, scoresheet  = plugin.play(i, r, bonus, self.players, self.scoresheets)
+                decision = decision.upper() if decision else None
                 nroll = len(roll)
                 if nroll > 0:
                     r0 = get_random_dice(nroll)
@@ -78,9 +80,14 @@ class Game():
                     scoresheet = self.scoresheets[scoresheet][player]
                     if decision not in scoresheet:
                         scoresheet[decision] = play_value(decision, r, bonus)
+                    else:
+                        raise Exception('Decision [{0}] is already taken'.format(decision))
+                    break
+
 
             except Exception as e:
-                print("Error inesperado: {0}".format(e))
+                print(traceback.format_exc())
+                print("Error inesperadamente inesperado: {0}".format(e))
                 # NOTIFY
 
 

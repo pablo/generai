@@ -2,7 +2,7 @@ from helper import print_dice, print_dice_val, print_scoresheets
 import string
 
 def name():
-    return "SERIAL_1.0"
+    return "CONIO_1.0"
 
 
 # this plugin uses console I/O to make plays

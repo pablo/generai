@@ -2,7 +2,11 @@ import os
 import random
 import itertools
 
-# common helpers
+# global helpers
+
+def most_common(lst):
+    return max(set(lst), key=lst.count)
+
 
 # play rules
 
@@ -10,7 +14,16 @@ def generala(dice):
     return len(set(dice)) == 1
 
 def poker(dice):
-    pass
+    cmc = most_common(dice)
+    return dice.count(cmc) == 4
+
+def fullhouse(dice):
+    cmc = most_common(dice)
+    return dice.count(cmc) == 3 and len(set(dice)) == 2
+
+def escalera(dice):
+    s = set(dice)
+    return s == {1, 2, 3, 4, 5} or s == {2, 3, 4, 5, 6} or s == {1, 3, 4, 5, 6}
 
 
 # play value helpers
@@ -27,7 +40,7 @@ def sample_wr(population, k):
     "Chooses k random elements (with replacement) from a population"
     n = len(population)
     _random, _int = random.random, int  # speed hack
-    return [_int(_random() * n) for i in itertools.repeat(None, k)]
+    return [_int((_random() * n)+1) for i in itertools.repeat(None, k)]
 
 def get_random_dice(n):
     return sample_wr([1,2,3,4,5,6], n)
@@ -49,5 +62,7 @@ def valid_play(play):
     return play in valid_plays
 
 def play_value(play, dice, bonus):
+    print("VALUE!")
+    print(dice)
     return valid_plays[play](dice, bonus)
 
