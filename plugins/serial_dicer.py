@@ -2,23 +2,29 @@ from helper import print_dice, print_dice_val, print_scoresheets
 import string
 
 def name():
-    return "SERIAL_1.0"
+    return "SERIAL"
 
 
-# this plugin uses console I/O to make plays
-
-def roll_dice_eval(roll_dice):
-    return [int(x) - 1 for x in roll_dice if x in string.digits]
+# this plugin will play serially to the next available free space
+# in its corresponding scoresheet
 
 def play(roll_no, dice, bonus, players, scoresheets):
-    if roll_no == 0:
-        print_scoresheets(scoresheets)
-    print("Roll: {0}".format(roll_no))
-    print_dice(dice)
-    roll_dice = input("Levantar dados? ") if roll_no < 2 else None
-    if roll_dice:
-        return roll_dice_eval(roll_dice), None, None
-    else:
-        decision = input("jugada? ")
-        scoresheet = int(input("casilla? "))
-        return ([], decision, scoresheet)
+    # where
+    i = 0
+    for ss in scoresheets:
+        my_ss = ss[name()]
+        if '4' not in my_ss:
+            return [], '4', i
+        elif '5' not in my_ss:
+            return [], '5', i
+        elif '6' not in my_ss:
+            return [], '6', i
+        elif 'ESCALERA' not in my_ss:
+            return [], 'ESCALERA', i
+        elif 'FULLHOUSE' not in my_ss:
+            return [], 'FULLHOUSE', i
+        elif 'POKER' not in my_ss:
+            return [], 'POKER', i
+        elif 'GENERALA' not in my_ss:
+            return [], 'GENERALA', i
+        i = i + 1

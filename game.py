@@ -2,6 +2,8 @@
 import sys
 import traceback
 
+from helper import print_scoresheets
+
 from generala import get_random_dice, valid_play, play_value
 
 class Player():
@@ -28,6 +30,7 @@ class Game():
 
     def __init__(self, nscoresheets):
         self.nscoresheets = nscoresheets
+        self.nplayers = 0
         self.players_plugins = {}
         self.players = []
         self.scoresheets = []
@@ -40,6 +43,7 @@ class Game():
         self.players.append(name)
         for i in range(self.nscoresheets):
             self.scoresheets[i][name] = {}
+        self.nplayers = self.nplayers + 1
 
     def start(self):
         # plays are:
@@ -56,7 +60,7 @@ class Game():
                 self.turn(player)
 
     def results(self):
-        print("RESULTs!")
+        print_scoresheets(self.scoresheets)
 
     def turn(self, player):
         plugin = self.players_plugins[player]

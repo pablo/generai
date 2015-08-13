@@ -43,7 +43,8 @@ def start_game():
 
     players_input = input("Ingrese los jugadores (separándolos con ,): ")
     players = [int(x.strip()) for x in players_input.split(",")]
-    game = Game(3)
+    nscoresheets = int(input("Cuántas casillas? "))
+    game = Game(nscoresheets)
     for player in players:
         game.add_player(plugins_list[player])
     game.start()

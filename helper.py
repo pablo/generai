@@ -109,15 +109,19 @@ def print_scoresheets(scoresheets):
     _4 = []
     _5 = []
     _6 = []
+    players_line = []
     escalera = []
     fullhouse = []
     poker = []
     generala = []
+    totales = [0] * len(scoresheets) * len(scoresheets[0])
     players = None
+    i = 0
     for ss in scoresheets:
         players = sorted(ss.keys())
         for player in players:
             s = ss[player]
+            players_line.append(player)
             _4.append(s['4'] if '4' in s else '_')
             _5.append(s['5'] if '5' in s else '_')
             _6.append(s['6'] if '6' in s else '_')
@@ -125,6 +129,12 @@ def print_scoresheets(scoresheets):
             fullhouse.append(s['FULLHOUSE'] if 'FULLHOUSE' in s else '_')
             poker.append(s['POKER'] if 'POKER' in s else '_')
             generala.append(s['GENERALA'] if 'GENERALA' in s else '_')
+            totales[i] = sum(s.values())
+            i = i+1
+
+    print("==========")
+    print_scoresheet_line('JUGADORES', players_line)
+    print("----------")
     print_scoresheet_line('4', _4)
     print_scoresheet_line('5', _5)
     print_scoresheet_line('6', _6)
@@ -132,4 +142,7 @@ def print_scoresheets(scoresheets):
     print_scoresheet_line('FULLHOUSE', fullhouse)
     print_scoresheet_line('POKER', poker)
     print_scoresheet_line('GENERALA', generala)
+    print("----------")
+    print_scoresheet_line("**TOTAL**", totales)
+    print("==========")
 

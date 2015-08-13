@@ -15,7 +15,7 @@ def generala(dice):
 
 def poker(dice):
     cmc = most_common(dice)
-    return dice.count(cmc) == 4
+    return dice.count(cmc) >= 4
 
 def fullhouse(dice):
     cmc = most_common(dice)
@@ -27,6 +27,13 @@ def escalera(dice):
 
 
 # play value helpers
+
+def poker_val(dice, bonus):
+    if poker(dice):
+        if bonus or generala(dice):
+            return 40 + 5
+        return 40
+    return 0
 
 def figura_val(figura, points):
     return lambda dice, bonus: (points + (5 if bonus else 0)) if figura(dice) else 0
@@ -50,7 +57,7 @@ def get_random_dice(n):
 
 valid_plays = {
     'GENERALA': figura_val(generala, 50),
-    'POKER': figura_val(poker, 40),
+    'POKER': poker_val,
     'FULLHOUSE': figura_val(fullhouse, 30),
     'ESCALERA': figura_val(escalera, 20),
     '4': numeros_val(4),
@@ -62,7 +69,5 @@ def valid_play(play):
     return play in valid_plays
 
 def play_value(play, dice, bonus):
-    print("VALUE!")
-    print(dice)
     return valid_plays[play](dice, bonus)
 
