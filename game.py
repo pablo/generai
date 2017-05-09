@@ -6,7 +6,7 @@ from helper import print_scoresheets
 
 from generala import get_random_dice, valid_play, play_value
 
-class Player():#more branching tests
+class Player():#last branching test
 
     def __init__(self, name):
         self.name = name
