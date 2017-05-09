@@ -6,7 +6,7 @@ from helper import print_scoresheets
 
 from generala import get_random_dice, valid_play, play_value
 
-class Player():#segundo comentario de prueba
+class Player():#asdasdasdasdprob
 
     def __init__(self, name):
         self.name = name
