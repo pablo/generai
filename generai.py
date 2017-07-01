@@ -1,13 +1,13 @@
+# coding=utf-8
 from os import listdir
 from os.path import isfile, join
 from importlib import import_module
 from game import Game
-
+from sandboxing import getName
 # plugins
 
 plugins = {}
-plugins_list = []
-
+plugins_list=[]
 def load_plugins():
     print("Loading plugins...")
     plugin_files = [f for f in listdir('plugins') if isfile(join('plugins',
@@ -18,11 +18,13 @@ def load_plugins():
         plugin_name = plugin_file[:-3]
         print("Loading plugin {0}".format(plugin_name))
         try:
-            m = import_module('plugins.{0}'.format(plugin_name))
-            plugins_loaded = plugins_loaded + 1
-            name = m.name()
-            plugins[name] = m
-            plugins_list.append(m)
+            name = getName(plugin_file)
+            if(name is not None):
+                plugins_loaded = plugins_loaded + 1
+                plugins[name] = plugin_file
+                plugins_list.append(name)
+            else:
+                raise Exception(name)
         except Exception as e:
             print("Plugin {0} was not loaded {1}".format(plugin_name, e))
             invalid_plugins = invalid_plugins + 1
@@ -33,7 +35,7 @@ def list_plugins(title=True):
         print("---------------- PLUGINS -----------------")
     i = 0
     for plugin in plugins_list:
-        print("{0}) {1}".format(i, plugin.name()))
+        print("{0}) {1}".format(i, plugin))
         i = i + 1
     print("\n")
 
@@ -41,12 +43,12 @@ def start_game():
     print("---------------- GENERALA -----------------")
     list_plugins(False)
 
-    players_input = input("Ingrese los jugadores (separándolos con ,): ")
+    players_input = raw_input("Ingrese los jugadores (separándolos con ,): ")
     players = [int(x.strip()) for x in players_input.split(",")]
-    nscoresheets = int(input("Cuántas casillas? "))
+    nscoresheets = int(raw_input("Cuántas casillas? "))
     game = Game(nscoresheets)
     for player in players:
-        game.add_player(plugins_list[player])
+        game.add_player(plugins_list[player],plugins[plugins_list[player]])
     game.start()
     game.results()
 
@@ -78,7 +80,7 @@ options = [
 
 def process_option(opt):
     for option in options:
-        if (isinstance(option["val"], list) and opt in option["val"]) or (opt == option["val"]):
+        if (isinstance(option["val"], list) and opt in option["val"]) or (str(opt) == option["val"]):
             option["fn"]()
 
 if __name__ == "__main__":

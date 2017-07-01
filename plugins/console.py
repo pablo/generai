@@ -8,7 +8,7 @@ def name():
 # this plugin uses console I/O to make plays
 
 def roll_dice_eval(roll_dice):
-    return [int(x) - 1 for x in roll_dice if x in string.digits]
+    return [int(x) - 1 for x in list(roll_dice)]
 
 def play(roll_no, dice, bonus, players, scoresheets):
     print_scoresheets(scoresheets)
@@ -18,6 +18,6 @@ def play(roll_no, dice, bonus, players, scoresheets):
     if roll_dice:
         return roll_dice_eval(roll_dice), None, None
     else:
-        decision = input("jugada? ")
-        scoresheet = int(input("casilla {0}? ".format(str(list(range(len(scoresheets)))))))
+        decision = raw_input("jugada? ")
+        scoresheet = int(raw_input("casilla {0}? ".format(str(list(range(len(scoresheets)))))))
         return ([], decision, scoresheet)
